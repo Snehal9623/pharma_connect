@@ -10,7 +10,4 @@ abstract class AppImages {
   static String get org_img => '${_assetImgPath}org_img.png';
   static String get dr_img => '${_assetImgPath}dr_img.png';
   static String get badge_dot_img => '${_assetImgPath}dot.png';
-
-  static String get selectedW8alletIcon =>
-      '${_assetImgPath}selected_wallet.png';
 }

@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pharma_connect/screens/dashboard/data/medicine_data.dart';
 import 'package:pharma_connect/utils/app_color.dart';
@@ -43,6 +42,7 @@ class _OrderItemScreenState extends State<OrderItemScreen> {
   bool isExpanded = false;
   int itemIndex = 0;
   int currentPage = 0;
+  bool errorBox = false;
 
   List<int> numberOfItems = [];
   List<String> images = [
@@ -128,21 +128,19 @@ class _OrderItemScreenState extends State<OrderItemScreen> {
                         padding: EdgeInsets.symmetric(
                           horizontal: 10.w,
                         ),
-                        child: Flexible(
-                          child: Container(
-                            width: ScreenUtil().screenWidth - 150.w,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                            ),
-                            child: Text(
-                              widget.title,
+                        child: Container(
+                          width: ScreenUtil().screenWidth - 150.w,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                          ),
+                          child: Text(
+                            widget.title,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 16.sp,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: 16.sp,
-                                overflow: TextOverflow.ellipsis,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -169,6 +167,48 @@ class _OrderItemScreenState extends State<OrderItemScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (errorBox) ...[
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: 20.h,
+                ),
+                child: Center(
+                  child: Container(
+                    width: 250.w,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: AppColors.badgeColor,
+                        width: 0.5.w,
+                      ),
+                      borderRadius: BorderRadius.circular(5.r),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          color: Colors.black,
+                          size: 15,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 5.h),
+                          child: Text(
+                            MyOrderItemScreenConstants.CART_LIMIT_TEXT,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
             if (images.isNotEmpty) ...[
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -700,7 +740,7 @@ class _OrderItemScreenState extends State<OrderItemScreen> {
                   ),
                   Container(
                       height: 50.h,
-                      width: ScreenUtil().screenWidth - 130.w,
+                      width: ScreenUtil().screenWidth - 136.w,
                       decoration:
                           BoxDecoration(color: AppColors.containerGreenColor),
                       child: Padding(
@@ -939,6 +979,9 @@ class _OrderItemScreenState extends State<OrderItemScreen> {
         setState(() {
           if (numberOfItems[index] > 0) {
             numberOfItems[index]--;
+            setState(() {
+              errorBox = false;
+            });
           }
         });
       },
@@ -956,6 +999,9 @@ class _OrderItemScreenState extends State<OrderItemScreen> {
         setState(() {
           if (numberOfItems[index] < 12) {
             numberOfItems[index]++;
+            setState(() {
+              errorBox = true;
+            });
           }
         });
       },
